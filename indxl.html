@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="睡前伙伴">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23d48c4a'/%3E%3Ctext y='.9em' font-size='70' x='15' y='75'%3E🌙%3C/text%3E%3C/svg%3E">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='80'%3E🌙%3C/text%3E%3C/svg%3E">
+    <link rel="manifest" href="data:application/json,%7B%22name%22%3A%22%E7%9D%A1%E5%89%8D%E4%BC%99%E4%BC%B4%22%2C%22short_name%22%3A%22%E7%9D%A1%E5%89%8D%E4%BC%99%E4%BC%B4%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23f9f3e6%22%2C%22theme_color%22%3A%22%23d48c4a%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data:image/svg+xml,%253Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%253E%253Crect width='100' height='100' rx='20' fill='%2523d48c4a'/%253E%253Ctext y='.9em' font-size='70' x='15' y='75'%253E%25F0%259F%258C%2599%253C/text%253E%253C/svg%253E%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image/svg+xml%22%7D%5D%7D">
+    <title>睡前伙伴 - 晚安记录</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { background: #f9f3e6; font-family: system-ui, -apple-system, sans-serif; padding: 20px 16px 40px; color: #3d2b1a; -webkit-font-smoothing: antialiased; }
+        .container { max-width: 600px; margin: 0 auto; }
+        .date-bar { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 20px; border-bottom: 1px solid #f0e0ce; padding-bottom: 12px; flex-wrap: wrap; gap: 8px; }
+        .date { font-weight: 500; font-size: 14px; color: #b97f4b; }
+        .week-progress { background: #fff0e0; padding: 4px 12px; border-radius: 20px; font-size: 12px; color: #8a5e35; }
+        .check-row { display: flex; justify-content: space-between; background: #fff5e6; padding: 12px 16px; border-radius: 40px; margin-bottom: 20px; }
+        .check-item { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+        .check-btn { width: 44px; height: 44px; border-radius: 50%; background: white; border: 2px solid #e6c8ae; font-size: 20px; cursor: pointer; transition: all 0.2s; }
+        .check-btn.done { background: #d48c4a; border-color: #d48c4a; color: white; }
+        .check-label { font-size: 12px; color: #9b7a5a; }
+        .card { background: white; border-radius: 32px; padding: 20px; margin-bottom: 20px; border: 1px solid #f2e2d0; }
+        .card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; border-bottom: 2px solid #fbe6d4; padding-bottom: 12px; }
+        .emoji { font-size: 28px; line-height: 1; }
+        .title { font-size: 20px; font-weight: 600; color: #d48c4a; }
+        .sub { font-size: 12px; color: #b97f4b; margin-left: auto; white-space: nowrap; }
+        .content { font-size: 17px; line-height: 1.5; }
+        .story-text { background: #fef8f0; padding: 16px; border-radius: 24px; margin: 10px 0; font-size: 16px; line-height: 1.6; }
+        .interactive { background: #f0f4f0; padding: 12px 16px; border-radius: 20px; margin-top: 12px; font-size: 15px; color: #2c5a2e; }
+        .chat-question { background: #faf3e8; padding: 10px 14px; border-radius: 20px; margin: 8px 0; font-size: 16px; }
+        .poem-lines { font-style: italic; color: #7c5f3a; margin: 10px 0; line-height: 1.8; font-size: 16px; }
+        button { background: #f5e2d0; border: none; padding: 10px 16px; border-radius: 40px; font-size: 14px; color: #9b5e2c; margin-top: 12px; cursor: pointer; transition: all 0.2s; }
+        button:active { transform: scale(0.97); }
+        .badge { background: #e6c8ae; color: #5a3a1f; font-size: 12px; border-radius: 30px; padding: 4px 10px; display: inline-block; margin-bottom: 12px; }
+        .record-area { background: #fef3e8; border-radius: 24px; padding: 16px; margin: 12px 0; }
+        .record-buttons { display: flex; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
+        .record-btn { background: #e6c8ae; color: #5a3a1f; flex: 1; text-align: center; min-width: 100px; }
+        .record-btn.recording { background: #d48c4a; color: white; animation: pulse 1s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .text-note { width: 100%; padding: 12px 16px; border-radius: 20px; border: 1px solid #f0e0ce; background: white; font-size: 16px; font-family: inherit; resize: vertical; margin: 8px 0; min-height: 80px; }
+        .save-note-btn { background: #d48c4a; color: white; width: auto; padding: 8px 20px; }
+        .history-item { background: #faf3e8; border-radius: 20px; padding: 12px; margin-top: 12px; font-size: 14px; }
+        .history-date { font-weight: 600; color: #d48c4a; margin-bottom: 8px; }
+        audio { width: 100%; border-radius: 40px; margin: 8px 0; }
+        .history-text { color: #5a4a38; margin-top: 8px; padding-top: 8px; border-top: 1px solid #f0e0ce; }
+        .delete-btn { background: none; color: #c97e5a; font-size: 12px; padding: 4px 8px; margin-top: 8px; width: auto; }
+        hr { margin: 8px 0; border: 0; height: 1px; background: #f0e0ce; }
+        .footer-note { text-align: center; margin-top: 30px; font-size: 12px; color: #c9aa85; padding: 0 20px; }
+        .empty-hint { color: #c9aa85; text-align: center; padding: 20px; }
+        @media (display-mode: standalone) {
+            body { padding-top: 44px; }
+        }
+        @media (prefers-color-scheme: dark) {
+            body { background: #2a2218; color: #e8dcc8; }
+            .card { background: #3a3024; border-color: #4a3f30; }
+            .date-bar { border-bottom-color: #4a3f30; }
+            .check-row { background: #3a3024; }
+            .check-btn { background: #4a3f30; border-color: #6a5a44; }
+            .week-progress { background: #4a3f30; color: #c9aa85; }
+            .story-text { background: #2a2218; }
+            .chat-question { background: #3a3024; }
+            .record-area { background: #3a3024; }
+            .history-item { background: #3a3024; }
+            .text-note { background: #4a3f30; border-color: #6a5a44; color: #e8dcc8; }
+            .badge { background: #5a4a38; color: #e8dcc8; }
+            .interactive { background: #1a3a1e; color: #8fc890; }
+            .poem-lines { color: #b8a88a; }
+            .check-label { color: #b8a88a; }
+            .title { color: #e8a86a; }
+            .sub { color: #b88a5a; }
+            button { background: #5a4a38; color: #d8b898; }
+            .save-note-btn { background: #d48c4a; color: white; }
+            .footer-note { color: #8a7a6a; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <div class="date-bar">
+        <span class="date" id="todayDate"></span>
+        <span class="week-progress" id="weekHint"></span>
+    </div>
+
+    <div class="check-row">
+        <div class="check-item"><div class="check-btn" data-check="char">🖊</div><span class="check-label">识字</span></div>
+        <div class="check-item"><div class="check-btn" data-check="poem">📖</div><span class="check-label">古诗</span></div>
+        <div class="check-item"><div class="check-btn" data-check="math">🔢</div><span class="check-label">数学</span></div>
+        <div class="check-item"><div class="check-btn" data-check="chat">💬</div><span class="check-label">聊天</span></div>
+    </div>
+
+    <div class="card">
+        <div class="card-header"><span class="emoji">🖊</span><span class="title">一字一故事</span><span class="sub">3分钟</span></div>
+        <div class="content" id="characterStory"></div>
+    </div>
+
+    <div class="card">
+        <div class="card-header"><span class="emoji">📖</span><span class="title">古诗童谣</span><span class="sub">3-5分钟</span></div>
+        <div class="content" id="poemContent"></div>
+    </div>
+
+    <div class="card">
+        <div class="card-header"><span class="emoji">🔢</span><span class="title">数学探索夜</span><span class="sub">3分钟</span></div>
+        <div class="content" id="mathContent"></div>
+    </div>
+
+    <div class="card">
+        <div class="card-header"><span class="emoji">💬</span><span class="title">亲子悄悄话</span><span class="sub">5分钟</span></div>
+        <div class="content" id="chatContent"></div>
+        <div class="record-area">
+            <div class="record-buttons">
+                <button class="record-btn" id="startRecordBtn">🎤 开始录音</button>
+                <button class="record-btn" id="stopRecordBtn" style="background:#ddd;color:#888;">⏹ 停止录音</button>
+            </div>
+            <textarea class="text-note" id="textNote" placeholder="📝 在这里手写记录今天聊了什么..."></textarea>
+            <button class="save-note-btn" id="saveNoteBtn">💾 保存手写记录</button>
+        </div>
+        <div id="historyList"></div>
+    </div>
+
+    <div class="footer-note">🌙 关上屏幕，亲亲抱抱 • 录音和文字记录会自动保存</div>
+</div>
+
+<script>
+(function() {
+    const characters = [
+        { word: "天", story: "今天讲「天」字。一个人张开双臂，就是「大」。头顶上再加一横，就是「天」。看窗外的天空，高高地罩着我们。" },
+        { word: "地", story: "今天讲「地」字。左边是土，右边是「也」。我们踩在大地上，土地上长出了花草树木。" },
+        { word: "水", story: "今天讲「水」字。水是一扭一扭往前流的。中间像一条弯弯的河，两边的小水花溅起来。" },
+        { word: "火", story: "今天讲「火」字。山上冒出来的火苗，热热的。冬天围在火堆旁取暖。要小心，火很危险哦。" },
+        { word: "山", story: "今天讲「山」字。三个山头立在一起，就像我们看到的山一样，中间最高。" },
+        { word: "日", story: "今天讲「日」字。太阳圆圆的，古人画个圈加一点。太阳给我们光和热，就是天上的太阳公公。" },
+        { word: "月", story: "今天讲「月」字。月亮弯弯的，像小船。古人画了一个弯弯的月亮。看看今晚月亮是什么形状？" },
+        { word: "田", story: "今天讲「田」字。一块一块方方的地，像格子一样。农民伯伯在田里种水稻、蔬菜。" },
+        { word: "云", story: "今天讲「云」字。天上的云朵变幻无穷，画一条横线是天空，下面一朵卷卷的云。" },
+        { word: "雨", story: "今天讲「雨」字。一滴一滴的雨水。上面一横是天，下面小点像雨滴落下来。" },
+        { word: "木", story: "今天讲「木」字。一棵树，中间是树干，上面是树枝，下面是树根。" },
+        { word: "林", story: "今天讲「林」字。两棵树并排站在一起，就是一片小树林。小鸟喜欢住在里面。" },
+        { word: "森", story: "今天讲「森」字。三棵树，很多很多树，就是大森林。有蘑菇、有小动物。" },
+        { word: "石", story: "今天讲「石」字。一块石头，像山脚下的一块大岩石。摸一摸路边的石头。" },
+        { word: "土", story: "今天讲「土」字。地面上鼓起来的小包包。大地上全是泥土。种花需要土。" },
+        { word: "大", story: "今天讲「大」字。一个人张开双臂，就是「大」。你张开手臂，好大呀！" },
+        { word: "小", story: "今天讲「小」字。三颗小沙子，就是「小」。小朋友有多小？伸出小拇指比一下。" },
+        { word: "多", story: "今天讲「多」字。两个夕阳叠在一起，就是很多很多的意思。天上有几盏灯？" },
+        { word: "少", story: "今天讲「少」字。一点一撇，就是「少」。你看碗里的饭粒还有多少？" },
+        { word: "上", story: "今天讲「上」字。一横是地面，一竖指向上方。天花板在上面，指一指，上面有什么？" },
+        { word: "下", story: "今天讲「下」字。一横是地面，一竖指向下方。地板在下面，蹲下来，下面有什么？" },
+        { word: "中", story: "今天讲「中」字。一个方框，中间一竖穿过去。你站在房间中间转一圈。" },
+        { word: "心", story: "今天讲「心」字。古人画了一颗心的形状。你的心在哪里？扑通扑通跳着。" },
+        { word: "手", story: "今天讲「手」字。画一只手，伸开五个手指。你的小手能做什么？" },
+        { word: "足", story: "今天讲「足」字。脚的意思。画一只脚丫的印子。你的小脚丫在哪里？" },
+        { word: "目", story: "今天讲「目」字。就是眼睛。画一只眼睛。你的眼睛在哪里？眨一眨。" },
+        { word: "耳", story: "今天讲「耳」字。画一只耳朵。你的耳朵在哪里？拉一拉，软软的。" },
+        { word: "鼻", story: "今天讲「鼻」字。自己的鼻子。你的鼻子在哪里？点一下，香不香？" },
+        { word: "口", story: "今天讲「口」字。嘴巴。你的小嘴巴在哪里？亲一个，mua~" },
+        { word: "牙", story: "今天讲「牙」字。牙齿白白的。你的牙齿在哪里？笑一个让我看看。" },
+        { word: "笑", story: "今天讲「笑」字。竹叶弯弯像笑脸。你笑起来最好看了！笑一个给妈妈看。" },
+        { word: "米", story: "今天讲「米」字。一粒一粒的米饭。我们吃的大米饭就是这样来的。碗里有多少粒？" },
+        { word: "饭", story: "今天讲「饭」字。左边是食物，右边是反。你最爱吃谁做的饭？" },
+        { word: "汤", story: "今天讲「汤」字。画一个碗，里面装着汤。红豆、绿豆、黄豆煮成汤，喝一口汤。" },
+        { word: "瓜", story: "今天讲「瓜」字。藤上结了大瓜。西瓜、冬瓜、哈密瓜，最爱吃什么瓜？" },
+        { word: "果", story: "今天讲「果」字。树上结了果子。苹果、梨、桃子都是果子。你最爱吃什么水果？" },
+        { word: "牛", story: "今天讲「牛」字。画一个牛头，两只角。牛可以挤牛奶。牛怎么叫？哞~" },
+        { word: "羊", story: "今天讲「羊」字。画一个羊头，两只弯弯的角。羊怎么叫？咩~" },
+        { word: "马", story: "今天讲「马」字。画一匹马，长长的鬃毛。跑得很快。你坐过旋转木马吗？" },
+        { word: "鱼", story: "今天讲「鱼」字。画一条鱼。鱼在水里游来游去。你喜欢吃鱼吗？" },
+        { word: "鸟", story: "今天讲「鸟」字。画一只小鸟，在天上飞，叽叽喳喳地唱歌。" },
+        { word: "门", story: "今天讲「门」字。画两扇对开的门。我们家的门在哪里？起来了，谁去关门？" },
+        { word: "窗", story: "今天讲「窗」字。窗户可以打开。趴在窗口往外看，看到了什么？" },
+        { word: "床", story: "今天讲「床」字。睡觉的地方就是床。你躺在软软的床上，晚安。" },
+        { word: "衣", story: "今天讲「衣」字。画一件衣服。今天穿什么衣服？是不是自己选的？" },
+        { word: "帽", story: "今天讲「帽」字。头上的就是帽子。你冬天的帽子是什么颜色的？" },
+        { word: "爸", story: "今天讲「爸」字。上面是父，下面是巴。爸爸在哪里？爸爸每天上班辛苦啦。" },
+        { word: "妈", story: "今天讲「妈」字。左边是女，右边是马。妈妈最亲爱的。你最爱妈妈哪里？" },
+        { word: "哥", story: "今天讲「哥」字。两个可叠在一起。大一点的是哥哥。你有哥哥吗？" },
+        { word: "姐", story: "今天讲「姐」字。左边女，右边且。比你大的女生是姐姐。" },
+        { word: "弟", story: "今天讲「弟」字。弟弟是小男孩。是弟弟还是妹妹？宝宝就是小宝贝。" }
+    ];
+
+    const poems = [
+        { name: "咏鹅", author: "骆宾王", lines: "鹅，鹅，鹅，<br>曲项向天歌。<br>白毛浮绿水，<br>红掌拨清波。", meaning: "大白鹅弯着脖子朝天唱歌，白色羽毛浮在绿水上，红色脚掌划着清波。" },
+        { name: "静夜思", author: "李白", lines: "床前明月光，<br>疑是地上霜。<br>举头望明月，<br>低头思故乡。", meaning: "月光照在床前，像地上的霜。抬头看月亮，低头想起了家乡。" },
+        { name: "悯农", author: "李绅", lines: "锄禾日当午，<br>汗滴禾下土。<br>谁知盘中餐，<br>粒粒皆辛苦。", meaning: "农民中午还在锄地，汗水滴到土里。我们吃的每一粒米，都是辛苦种出来的。" },
+        { name: "江雪", author: "柳宗元", lines: "千山鸟飞绝，<br>万径人踪灭。<br>孤舟蓑笠翁，<br>独钓寒江雪。", meaning: "山里没有鸟，路上没有人。只有一个老爷爷披着蓑衣，在雪中的江上钓鱼。" },
+        { name: "春晓", author: "孟浩然", lines: "春眠不觉晓，<br>处处闻啼鸟。<br>夜来风雨声，<br>花落知多少。", meaning: "春天睡得很香，醒来听到鸟叫。昨晚刮风下雨了，不知道花落了多少。" },
+        { name: "绝句", author: "杜甫", lines: "两个黄鹂鸣翠柳，<br>一行白鹭上青天。<br>窗含西岭千秋雪，<br>门泊东吴万里船。", meaning: "两只黄鹂在柳树上唱歌，一行白鹭飞上蓝天。窗外有千年不化的雪山。" },
+        { name: "清明", author: "杜牧", lines: "清明时节雨纷纷，<br>路上行人欲断魂。<br>借问酒家何处有，<br>牧童遥指杏花村。", meaning: "清明时细雨纷纷，路上的行人很忧伤。问哪里有酒家？牧童指向远处的杏花村。" },
+        { name: "所见", author: "袁枚", lines: "牧童骑黄牛，<br>歌声振林樾。<br>意欲捕鸣蝉，<br>忽然闭口立。", meaning: "放牛娃骑在牛背上，歌声响遍树林。想捉叫的知了，突然闭口站住了。" },
+        { name: "小池", author: "杨万里", lines: "泉眼无声惜细流，<br>树阴照水爱晴柔。<br>小荷才露尖尖角，<br>早有蜻蜓立上头。", meaning: "泉眼悄悄流着细水，小荷刚露出尖角，早有蜻蜓站在上面了。" },
+        { name: "池上", author: "白居易", lines: "小娃撑小艇，<br>偷采白莲回。<br>不解藏踪迹，<br>浮萍一道开。", meaning: "一个小孩撑着小船，偷偷采了白莲回来。却不会藏踪迹，浮萍划出一道水路。" },
+        { name: "山村咏怀", author: "邵雍", lines: "一去二三里，<br>烟村四五家。<br>亭台六七座，<br>八九十枝花。", meaning: "走了二三里路，看到四五户人家。有六七座亭台，还有八九十枝花。" },
+        { name: "元日", author: "王安石", lines: "爆竹声中一岁除，<br>春风送暖入屠苏。<br>千门万户曈曈日，<br>总把新桃换旧符。", meaning: "在爆竹声中一年过去了，春风送来了温暖。家家户户都换上了新对联。" }
+    ];
+
+    const mathStories = [
+        { type: "story", title: "阿基米德和浴缸", content: "阿基米德洗澡时，发现水从浴缸溢出来。他光着身子跑出去大喊「我发现啦！」——他发现了浮力定律。" },
+        { type: "story", title: "高斯求和", content: "高斯小学时，老师让算1+2+3+...+100。高斯很快报出答案5050——他把数字配对，1+100=101，有50对。" },
+        { type: "story", title: "祖冲之圆周率", content: "祖冲之把圆周率算到小数点后7位（3.1415926），这个纪录保持了1000年。他是中国古代最伟大的数学家。" },
+        { type: "story", title: "鲁班和锯子", content: "鲁班小时候上山，被带刺的草划破了手。他观察草叶，发明了锯子。生活里处处有数学和发明。" },
+        { type: "game", title: "猜数字", content: "我们来玩猜数字！心里想一个1到10之间的数字，我猜对了你就说「中了」，错了就说「大了」或「小了」。猜对了就亲一下！" },
+        { type: "game", title: "火箭倒计时", content: "我们从10数到1，然后「发射」！10、9、8...3、2、1、0——发射！呜——火箭飞上天啦！" },
+        { type: "game", title: "数数一家人", content: "我们家有几口人？爸爸、妈妈、宝宝……还有爷爷奶奶呢？数一数一共多少只眼睛？" },
+        { type: "game", title: "手指躲猫猫", content: "你有10个手指头。现在藏起来2个，还剩几个？再藏3个呢？我们一起来数一数。" },
+        { type: "game", title: "奇数和偶数", content: "1、3、5、7、9是单数（奇数）；2、4、6、8、10是双数（偶数）。你的鼻子是单数还是双数？" }
+    ];
+
+    const chatThemes = [
+        { week: 1, topic: "最开心的事", q1: "今天最开心的一件事情是什么？", q2: "第二开心的呢？", q3: "如果把开心的事情画成一幅画，你会画什么？" },
+        { week: 2, topic: "朋友", q1: "你最好的朋友是谁？为什么？", q2: "你觉得好朋友应该是什么样的？", q3: "如果你的朋友不开心了，你会怎么做？" },
+        { week: 3, topic: "魔法森林", q1: "如果你有一座魔法森林，里面有什么？", q2: "森林里住着什么小动物？", q3: "在魔法森林里，你最想遇见谁？" },
+        { week: 4, topic: "家人", q1: "你和谁在一起时最开心？", q2: "爸爸妈妈最喜欢你做什么？", q3: "你最最爱的是谁？有多爱？" },
+        { week: 5, topic: "害怕和勇敢", q1: "你有没有什么事情觉得害怕？", q2: "害怕的时候你怎么让自己好一点？", q3: "你能想起自己什么时候最勇敢吗？" }
+    ];
+
+    function getTodayKey() {
+        var d = new Date();
+        return d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate();
+    }
+
+    function getDayIndex() {
+        var start = new Date(2026, 5, 3);
+        var today = new Date();
+        var diff = Math.floor((today - start) / (1000*60*60*24));
+        return diff >= 0 ? diff % characters.length : 0;
+    }
+
+    var mediaRecorder = null;
+    var audioChunks = [];
+
+    function loadCheckStatus() {
+        var today = getTodayKey();
+        var saved = localStorage.getItem('check_' + today);
+        var status = saved ? JSON.parse(saved) : { char: false, poem: false, math: false, chat: false };
+        document.querySelectorAll('.check-btn').forEach(function(btn) {
+            var type = btn.dataset.check;
+            if (status[type]) {
+                btn.classList.add('done');
+            } else {
+                btn.classList.remove('done');
+            }
+            btn.onclick = function() {
+                status[type] = !status[type];
+                localStorage.setItem('check_' + today, JSON.stringify(status));
+                loadCheckStatus();
+            };
+        });
+    }
+
+    function render() {
+        var idx = getDayIndex();
+        var weekNum = Math.floor(idx / 5) + 1;
+        var charObj = characters[idx];
+        var poem = poems[(weekNum-1) % poems.length];
+        var chat = chatThemes[(weekNum-1) % chatThemes.length];
+        var mathItem = mathStories[Math.floor(Math.random() * mathStories.length)];
+
+        document.getElementById('weekHint').innerHTML = '📅 第' + weekNum + '周 · 今天学「' + charObj.word + '」';
+        var d = new Date();
+        document.getElementById('todayDate').innerHTML = d.getFullYear() + '.' + (d.getMonth()+1) + '.' + d.getDate() + ' 🌙';
+
+        document.getElementById('characterStory').innerHTML =
+            '<div class="badge">✏️ ' + charObj.word + '</div>' +
+            '<div class="story-text">' + charObj.story + '</div>' +
+            '<div class="interactive">✋ 在空气中写一个「' + charObj.word + '」字</div>';
+
+        document.getElementById('poemContent').innerHTML =
+            '<div class="badge">📜 ' + poem.name + ' · ' + poem.author + '</div>' +
+            '<div class="poem-lines">' + poem.lines + '</div>' +
+            '<div class="story-text">💡 ' + poem.meaning + '</div>';
+
+        document.getElementById('mathContent').innerHTML = mathItem.type === 'story'
+            ? '<div class="badge">📖 ' + mathItem.title + '</div><div class="story-text">' + mathItem.content + '</div>'
+            : '<div class="badge">🎮 小游戏</div><div class="story-text">' + mathItem.content + '</div>';
+
+        document.getElementById('chatContent').innerHTML =
+            '<div class="badge">💬 ' + chat.topic + '</div>' +
+            '<div class="chat-question">❓ ' + chat.q1 + '</div>' +
+            '<div class="chat-question">❓ ' + chat.q2 + '</div>' +
+            '<div class="chat-question">❓ ' + chat.q3 + '</div>';
+
+        loadHistory();
+    }
+
+    function loadHistory() {
+        var today = getTodayKey();
+        var all = JSON.parse(localStorage.getItem('chatHistory') || '{}');
+        var historyDiv = document.getElementById('historyList');
+        var dates = Object.keys(all).sort().reverse();
+        if (dates.length === 0) {
+            historyDiv.innerHTML = '<div class="empty-hint">📭 还没有记录，录一次音吧 🌙</div>';
+            return;
+        }
+        historyDiv.innerHTML = dates.map(function(date) {
+            var records = all[date];
+            var html = '<div class="history-item"><div class="history-date">📅 ' + date + '</div>';
+            if (records.audio) {
+                html += '<audio controls src="' + records.audio + '"></audio>';
+            }
+            if (records.text) {
+                html += '<div class="history-text">📝 ' + escapeHtml(records.text) + '</div>';
+            }
+            html += '<button class="delete-btn" onclick="deleteRecord(\'' + date + '\')">🗑 删除这条记录</button></div>';
+            return html;
+        }).join('');
+    }
+
+    function escapeHtml(str) {
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    window.saveRecord = function(text, audioData) {
+        var today = getTodayKey();
+        var all = JSON.parse(localStorage.getItem('chatHistory') || '{}');
+        if (!all[today]) all[today] = {};
+        if (text) all[today].text = text;
+        if (audioData) all[today].audio = audioData;
+        localStorage.setItem('chatHistory', JSON.stringify(all));
+        loadHistory();
+    };
+
+    window.deleteRecord = function(date) {
+        var all = JSON.parse(localStorage.getItem('chatHistory') || '{}');
+        delete all[date];
+        localStorage.setItem('chatHistory', JSON.stringify(all));
+        loadHistory();
+    };
+
+    var startBtn = document.getElementById('startRecordBtn');
+    var stopBtn = document.getElementById('stopRecordBtn');
+
+    startBtn.onclick = async function() {
+        try {
+            var stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            mediaRecorder = new MediaRecorder(stream);
+            audioChunks = [];
+            mediaRecorder.ondataavailable = function(e) {
+                audioChunks.push(e.data);
+            };
+            mediaRecorder.onstop = function() {
+                var blob = new Blob(audioChunks, { type: 'audio/mp4' });
+                var reader = new FileReader();
+                reader.readAsDataURL(blob);
+                reader.onloadend = function() {
+                    saveRecord(null, reader.result);
+                    alert('录音已保存！');
+                };
+                stream.getTracks().forEach(function(t) { t.stop(); });
+            };
+            mediaRecorder.start();
+            startBtn.classList.add('recording');
+            startBtn.textContent = '🔴 录音中...';
+            stopBtn.style.background = '#e6c8ae';
+            stopBtn.style.color = '#5a3a1f';
+        } catch(e) {
+            alert('无法访问麦克风，请在设置中允许麦克风权限。');
+        }
+    };
+
+    stopBtn.onclick = function() {
+        if (mediaRecorder && mediaRecorder.state === 'recording') {
+            mediaRecorder.stop();
+            startBtn.classList.remove('recording');
+            startBtn.textContent = '🎤 开始录音';
+            stopBtn.style.background = '#ddd';
+            stopBtn.style.color = '#888';
+        }
+    };
+
+    document.getElementById('saveNoteBtn').onclick = function() {
+        var text = document.getElementById('textNote').value.trim();
+        if (text) {
+            saveRecord(text, null);
+            document.getElementById('textNote').value = '';
+            alert('文字已保存！');
+        } else {
+            alert('写点什么再保存吧 📝');
+        }
+    };
+
+    render();
+    loadCheckStatus();
+
+    if ('serviceWorker' in navigator) {
+        var swCode = 'self.addEventListener("fetch",function(e){e.respondWith(fetch(e.request).catch(function(){return new Response("离线了",{status:503})}))});';
+        var blob = new Blob([swCode], { type: 'application/javascript' });
+        var swUrl = URL.createObjectURL(blob);
+        navigator.serviceWorker.register(swUrl).catch(function() {});
+    }
+})();
+</script>
+</body>
+</html>
